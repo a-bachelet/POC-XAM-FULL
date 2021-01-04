@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:PocXamFull.Converters"
+             x:Name="CharactersPage"
+             x:Class="PocXamFull.Views.Characters"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:AliveStatusStringToColorConverter x:Key="statusStringToColor" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+        <CollectionView
+            ItemsSource="{Binding Characters}"
+            SelectionMode="Single"
+            BackgroundColor="#3c3e44"
+            SelectedItem="{Binding SelectedCharacter}"
+            SelectionChangedCommand="{Binding GoToCharacterPageCommand}"
+            RemainingItemsThreshold="{Binding MissingCharactersCount}"
+            RemainingItemsThresholdReachedCommand="{Binding CharactersThresholdReachedCommand}"
+        >
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <SwipeView BackgroundColor="#3c3e44">
+                        <SwipeView.RightItems>
+                            <SwipeItems Mode="Reveal">
+                                <SwipeItem
+                                    IconImageSource="star.png"
+                                    BackgroundColor="#7f8c8d"
+                                    Command="{Binding BindingContext.GoToCharacterPageCommand, Source = {x:Reference CharactersPage}}"
+                                    CommandParameter="{Binding Id}"
+                                />
+                            </SwipeItems>
+                        </SwipeView.RightItems>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="150" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Image Source="{Binding Image}" Grid.Row="0" Grid.Column="0" />
+                            <StackLayout
+                                Padding="20,0"
+                                Grid.Row="0"
+                                Grid.Column="1"
+                                HorizontalOptions="Start"
+                                VerticalOptions="Center"
+                                Orientation="Vertical"
+                            >
+                                <Label Text="{Binding Name}" FontSize="Large" TextColor="White" FontAttributes="Bold" />
+                                <StackLayout
+                                    Orientation="Horizontal"
+                                    HorizontalOptions="Start"
+                                    VerticalOptions="Center"
+                                >
+                                    <Ellipse Fill="{Binding Status, Converter={ StaticResource statusStringToColor }}"  WidthRequest="10" HeightRequest="10" Aspect="Uniform"/>
+                                    <Label Text="{Binding Status}" TextColor="White" />
+                                    <Label Text="-" TextColor="White" />
+                                    <Label Text="{Binding Species}" TextColor="White" />
+                                </StackLayout>
+                                <Label Text="Last Known Location :" TextColor="#9e9e9e" FontSize="11" Margin="0,5,0,0" />
+                                <Label Text="{Binding Location.Name}" TextColor="White" />
+                            </StackLayout>
+                        </Grid>
+                    </SwipeView>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </StackLayout>
+
+</ContentPage>
